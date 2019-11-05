@@ -33,6 +33,16 @@ class EosRPC {
     }
   }
 
+  async getProducers () {
+    try {
+      let producers = await this.rpc.get_producers()
+      return producers
+    } catch (error) {
+      userError(error, 'Get producers')
+      throw error
+    }
+  }
+
   async getBalance (name) {
     try {
       var balance = 0.0
