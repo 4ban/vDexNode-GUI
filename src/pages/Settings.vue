@@ -19,7 +19,7 @@
           </div>
         </div>
         <!-- Settings -->
-        <div class="row q-col-gutter-x-lg q-mb-lg titilium">
+        <div class="row q-col-gutter-x-lg q-col-gutter-y-lg q-mb-lg titilium">
           <div class="col-5">
             <q-banner dense class="text-vgrey bg-vdark q-pa-md">
               <div class="text-subtitle2 text-uppercase">Configuration</div>
@@ -57,7 +57,7 @@
               </q-item>
             </q-list>
           </div>
-          <div class="col">
+          <div class="col-7">
             <q-banner dense class="text-vgrey bg-vdark q-pa-md">
               <div class="text-subtitle2 text-uppercase">Stats</div>
             </q-banner>
@@ -112,6 +112,9 @@
               </q-item>
             </q-list>
           </div>
+          <div class="col" v-if="loggedIn">
+            <EndpointsWidget />
+          </div>
         </div>
         <!-- Edit eos endpoint dialog -->
         <q-dialog v-model="editEosEndpointDialog">
@@ -122,7 +125,7 @@
             </q-card-section>
             <q-card-section align="right">
               <q-form @submit="updateEosEndpoint()">
-                <q-input dark dense clearable v-model="newEosEndpoint" counter color="vgrey" ref="input" @keyup.enter="updateEosEndpoint" label="New EOS Endpoint"/>
+                <q-input dark dense clearable v-model="newEosEndpoint" counter color="vgrey" ref="input" @keyup.enter="updateEosEndpoint" label="New EOS Endpoint" />
                 <q-btn color="vgrey" :disabled="newEosEndpoint ? false: true" unelevated rounded outline class="q-mt-md" label="Continue" type="submit" v-close-popup />
               </q-form>
             </q-card-section>
@@ -151,9 +154,13 @@
 <script>
 import Vue from 'vue'
 import { EosRPC, EosAPI } from '@/util/EosWrapper'
+import EndpointsWidget from '../components/EndpointsWidget.vue'
 const { app } = require('electron').remote
 
 export default {
+  components: {
+    EndpointsWidget
+  },
   data () {
     return {
       version: this.$utils.getVersion(),
@@ -179,7 +186,10 @@ export default {
   mounted () {
     this.checkNodeApiStatus()
     this.checkEosEndpointStatus()
-    this.s1 = setInterval(() => { this.checkEosEndpointStatus(); this.checkNodeApiStatus() }, 300000)
+    this.s1 = setInterval(() => {
+      this.checkEosEndpointStatus()
+      this.checkNodeApiStatus()
+    }, 300000)
   },
   beforeDestroy () {
     clearInterval(this.s1)
