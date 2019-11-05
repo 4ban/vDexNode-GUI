@@ -5,6 +5,10 @@ import { userResult } from '@/util/resultHandler'
 import axios from 'axios'
 const { app, dialog } = require('electron').remote
 const fs = require('fs')
+const request = require('request-promise-native')
+
+const removeLastSlashIfExist = url =>
+  url && (url.substr(url.length - 1, 1) === '/' ? url.substr(0, url.length - 1) : url)
 
 /**
  * Function returns an array with removed duplicates by any field in the object
@@ -145,44 +149,62 @@ function notifyMe () {
   // want to be respectful there is no need to bother them any more.
 }
 
-async function checkEosEndpoint (url) {
+const checkEosEndpoint = async url => {
   return new Promise(resolve => {
-    Vue.prototype
-      .$http({
-        method: 'get',
-        url: url + '/v1/chain/get_info',
-        responseType: 'arraybuffer'
-      })
-      .then(response => {
-        if (response.status === 200) resolve(true)
+    const apiUrl = `${url}/v1/chain/get_info`
+    request({ url: apiUrl, json: false, timeout: 3000, rejectUnauthorized: false })
+      .then(body => {
+        const correctedBody = body.indexOf('{') > 0 ? body.substr(body.indexOf('{')) : body
+        const response = JSON.parse(correctedBody)
+        if (response.server_version) resolve(true)
         else resolve(false)
       })
       .catch(error => {
-        // userError(error, 'Check EOS endpoint')
-        resolve(false)
-        throw error
+        if (error) resolve(false)
       })
   })
 }
 
-async function checkNodeApi (url) {
+const checkNodeApi = async url => {
   return new Promise(resolve => {
-    Vue.prototype
-      .$http({
-        method: 'get',
-        url: url,
-        responseType: 'arraybuffer'
-      })
-      .then(response => {
-        if (response.status === 200) resolve(true)
+    request({ url, json: false, timeout: 3000, rejectUnauthorized: false })
+      .then(body => {
+        const correctedBody = body.indexOf('{') > 0 ? body.substr(body.indexOf('{')) : body
+        const response = JSON.parse(correctedBody)
+        if (response.id) resolve(true)
         else resolve(false)
       })
       .catch(error => {
-        // userError(error, 'Check Node API')
-        resolve(false)
-        throw error
+        if (error) resolve(false)
       })
   })
+}
+
+const correctUrl = url => {
+  if (!url || url.length < 1) {
+    return url
+  }
+  let correctedUrl = url
+  if (correctedUrl.indexOf('http') < 0 && correctedUrl.length > 0) {
+    correctedUrl = `http://${correctedUrl}`
+  }
+  correctedUrl = removeLastSlashIfExist(correctedUrl)
+  if (correctedUrl === 'http://www.zbeos.com') {
+    correctedUrl = 'https://www.zbeos.com'
+  }
+  return correctedUrl
+}
+
+const getBPjson = async bpUrl => {
+  const url = `${bpUrl}/bp.json`
+  try {
+    const body = await request({ url, json: false, timeout: 60000, rejectUnauthorized: false })
+    const correctedBody = body.indexOf('{') > 0 ? body.substr(body.indexOf('{')) : body
+
+    return JSON.parse(correctedBody)
+  } catch (e) {
+    return undefined
+  }
 }
 
 export {
@@ -196,5 +218,7 @@ export {
   getTime,
   copyToClipboard,
   checkEosEndpoint,
-  checkNodeApi
+  checkNodeApi,
+  correctUrl,
+  getBPjson
 }
