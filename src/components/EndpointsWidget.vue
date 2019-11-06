@@ -4,17 +4,18 @@
       <div class="text-subtitle2 text-uppercase">EOS Endpoints</div>
       <div>Number of endpoints: {{ this.endpoints.length }}</div>
     </q-banner>
-    <q-table dense :data="endpoints" :columns="endpointsColumns" row-key="name" virtual-scroll :pagination.sync="endpointsPagination" :rows-per-page-options="[0]" table-style="max-height: 190pt;" hide-bottom class="bg-vdark text-vgrey">
+    <q-linear-progress dark indeterminate track-color="vgrey" color="vgreen" v-if="endpoints.length === 0" />
+    <q-table dense square :data="endpoints" :columns="endpointsColumns" row-key="name" virtual-scroll :pagination.sync="endpointsPagination" :rows-per-page-options="[0]" table-style="max-height: 190pt;" hide-bottom class="bg-vdark text-vgrey">
       <template v-slot:body="props">
         <q-tr :props="props">
           <q-td key="owner" :props="props">
             <q-btn dense flat size="sm" class="code" @click="$utils.openExternal(props.row.url + '/bp.json' ) " :label="props.row.owner" :disabled="!props.row.url" />
           </q-td>
-          <q-td key="location" :props="props" class="code">{{ props.row.location }}</q-td>
-          <q-td key="total_votes" :props="props" class="code">{{ Math.floor(props.row.total_votes).toLocaleString() }}</q-td>
-          <q-td key="http_address" :props="props" class="code">{{ props.row.http_address }}</q-td>
-          <q-td key="https_address" :props="props" class="code">{{ props.row.https_address }}</q-td>
-          <q-td key="last_claim_time" :props="props" class="code">{{ props.row.last_claim_time }}</q-td>
+          <q-td key="location" :props="props" class>{{ props.row.location }}</q-td>
+          <q-td key="total_votes" :props="props" class>{{ Math.floor(props.row.total_votes).toLocaleString() }}</q-td>
+          <q-td key="last_claim_time" :props="props">{{ props.row.last_claim_time }}</q-td>
+          <q-td key="http_address" :props="props">{{ props.row.http_address }}</q-td>
+          <q-td key="https_address" :props="props">{{ props.row.https_address }}</q-td>
           <q-td key="alive" :props="props" class="code">
             <span class="text-weight-bolder text-uppercase" :class="props.row.alive ? 'text-vgreen' : 'text-red'">{{ props.row.alive ? 'ok' : 'fail' }}</span>
           </q-td>
@@ -39,7 +40,7 @@ export default {
       endpoints: [],
       endpointsColumns: [
         { name: 'owner', align: 'left', label: 'Name', field: 'owner', sortable: true },
-        { name: 'location', align: 'right', label: 'Location', field: 'location' },
+        { name: 'location', align: 'left', label: 'Location', field: 'location' },
         {
           name: 'total_votes',
           align: 'right',
@@ -48,9 +49,9 @@ export default {
           sortable: true,
           sort: (a, b) => parseInt(b) - parseInt(a)
         },
+        { name: 'last_claim_time', align: 'right', label: 'Last claim time', field: 'last_claim_time' },
         { name: 'http_address', align: 'left', label: 'HTTP Address', field: 'http_address' },
         { name: 'https_address', align: 'left', label: 'SSL Address', field: 'https_address' },
-        { name: 'last_claim_time', align: 'right', label: 'Claim time', field: 'last_claim_time' },
         { name: 'alive', align: 'center', label: 'Alive', field: 'alive' },
         { name: 'use', align: 'center', label: 'Use', field: 'use' }
       ],
@@ -102,7 +103,7 @@ export default {
                 }
                 const apiEndpoint = node.api_endpoint
                 const sslEndpoint = node.ssl_endpoint
-                let location = node.location.country ? node.location.country + ',' : 'Unknown,'
+                let location = node.location.country ? node.location.country + ', ' : 'Unknown, '
                 location += node.location.name ? node.location.name : 'Unknown'
                 return {
                   location: location,
