@@ -14,13 +14,16 @@
           <div class="col-5 q-py-sm q-px-sm">
             <div class="row justify-end">
               <q-btn outline rounded color="vgold" class="q-mx-xs" label="Home" to="/" />
-              <q-btn v-if="loggedIn" outline rounded color="vgold" class="q-mx-xs" label="Logout" @click="$configManager.logout()" />
+              <q-btn v-if="loggedIn" flat round color="vgold" class="q-mx-xs" icon="fas fa-sign-out-alt" @click="$configManager.logout()" />
             </div>
           </div>
         </div>
         <!-- Settings -->
         <div class="row q-col-gutter-x-lg q-col-gutter-y-lg q-mb-lg titilium">
           <div class="col-5">
+            <q-banner dense class="text-vdark bg-vred q-pa-md" v-if="!loggedIn">
+              <div class="text-subtitle2 text-uppercase text-weight-bolder">The EOS Endpoints monitor can't operate with non-working default endpoint. You have to find and change it manually. Please use: https://eosnetworkmonitor.io/</div>
+            </q-banner>
             <q-banner dense class="text-vgrey bg-vdark q-pa-md">
               <div class="text-subtitle2 text-uppercase">Configuration</div>
             </q-banner>
@@ -28,33 +31,35 @@
               <q-item>
                 <q-item-section>
                   <q-item-label>EOS endpoint</q-item-label>
-                  <q-item-label caption class="text-vgrey text-uppercase">
-                    Status:
-                    <span class="text-weight-bolder" :class="eosEndpointStatus ? 'text-vgreen' : 'text-red'">{{ eosEndpointStatus ? 'ok' : 'fail' }}</span>
-                  </q-item-label>
+                  <q-item-label caption class="code text-vgold">{{ $configStore.get('eos_endpoint') }}</q-item-label>
                 </q-item-section>
-                <q-item-section side>
-                  <q-item-label class="code">{{ $configStore.get('eos_endpoint') }}</q-item-label>
+                <q-item-section side class="text-uppercase">
+                  <q-item-label>Alive</q-item-label>
+                  <q-item-label class="text-weight-bolder" :class="eosEndpointStatus ? 'text-vgreen' : 'text-red'">{{ eosEndpointStatus ? 'ok' : 'fail' }}</q-item-label>
                 </q-item-section>
                 <q-item-section avatar>
                   <q-btn rounded outline size="sm" dense class="q-px-md" label="Edit" @click="editEosEndpointDialog = true" />
                 </q-item-section>
               </q-item>
+              <q-banner dense class="text-vgrey bg-vred q-pa-md" v-if="!eosEndpointStatus">
+                <div>The app will not work if the EOS endpoint is not operable</div>
+              </q-banner>
               <q-item>
                 <q-item-section>
                   <q-item-label>Node API gateway</q-item-label>
-                  <q-item-label caption class="text-vgrey text-uppercase">
-                    Status:
-                    <span class="text-weight-bolder" :class="nodeApiStatus ? 'text-vgreen' : 'text-red'">{{ nodeApiStatus ? 'ok' : 'fail' }}</span>
-                  </q-item-label>
+                  <q-item-label caption class="code text-vgold">{{ $configStore.get('node_api') }}</q-item-label>
                 </q-item-section>
-                <q-item-section side>
-                  <q-item-label class="code">{{ $configStore.get('node_api') }}</q-item-label>
+                <q-item-section side class="text-uppercase">
+                  <q-item-label>Alive</q-item-label>
+                  <q-item-label class="text-weight-bolder" :class="nodeApiStatus ? 'text-vgreen' : 'text-red'">{{ nodeApiStatus ? 'ok' : 'fail' }}</q-item-label>
                 </q-item-section>
                 <q-item-section avatar>
                   <q-btn rounded outline size="sm" dense class="q-px-md" label="Edit" @click="editNodeApiDialog = true" />
                 </q-item-section>
               </q-item>
+              <q-banner dense class="text-vgrey bg-vred q-pa-md" v-if="!nodeApiStatus">
+                <div>The app will not work if the Node API is not operable</div>
+              </q-banner>
             </q-list>
           </div>
           <div class="col-7">
@@ -65,55 +70,43 @@
               <q-item>
                 <q-item-section>
                   <q-item-label>Config file path</q-item-label>
-                </q-item-section>
-                <q-item-section side>
-                  <q-item-label class="code">{{ $configStore.path }}</q-item-label>
+                  <q-item-label caption class="code text-vgold">{{ $configStore.path }}</q-item-label>
                 </q-item-section>
               </q-item>
               <q-item>
                 <q-item-section>
                   <q-item-label>RPC endpoint in use</q-item-label>
-                </q-item-section>
-                <q-item-section side>
-                  <q-item-label class="code">{{ inUseRPC }}</q-item-label>
+                  <q-item-label caption class="code text-vgold">{{ inUseRPC }}</q-item-label>
                 </q-item-section>
               </q-item>
               <q-item>
                 <q-item-section>
                   <q-item-label>EOS authority provider in use</q-item-label>
-                </q-item-section>
-                <q-item-section side>
-                  <q-item-label class="code">{{ inUseEOS }}</q-item-label>
+                  <q-item-label caption class="code text-vgold">{{ inUseEOS }}</q-item-label>
                 </q-item-section>
               </q-item>
               <q-item>
                 <q-item-section>
                   <q-item-label>Vue version</q-item-label>
-                </q-item-section>
-                <q-item-section side>
-                  <q-item-label class="code">{{ vueVersion }}</q-item-label>
+                  <q-item-label caption class="code text-vgold">{{ vueVersion }}</q-item-label>
                 </q-item-section>
               </q-item>
               <q-item>
                 <q-item-section>
                   <q-item-label>Quasar version</q-item-label>
-                </q-item-section>
-                <q-item-section side>
-                  <q-item-label class="code">{{ $q.version }}</q-item-label>
+                  <q-item-label caption class="code text-vgold">{{ $q.version }}</q-item-label>
                 </q-item-section>
               </q-item>
               <q-item>
                 <q-item-section>
                   <q-item-label>Get vDexNode option</q-item-label>
-                </q-item-section>
-                <q-item-section side>
-                  <q-item-label class="code">{{ $configStore.get('node_readme') }}</q-item-label>
+                  <q-item-label caption class="code text-vgold">{{ $configStore.get('node_readme') }}</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
           </div>
-          <div class="col" v-if="loggedIn">
-            <EndpointsWidget />
+          <div class="col-12" v-if="loggedIn">
+            <EndpointsWidget @clicked="refresh()" />
           </div>
         </div>
         <!-- Edit eos endpoint dialog -->
@@ -153,10 +146,8 @@
 
 <script>
 import Vue from 'vue'
-import { EosRPC, EosAPI } from '@/util/EosWrapper'
 import EndpointsWidget from '../components/EndpointsWidget.vue'
-const { app } = require('electron').remote
-
+// TODO: add the lazy checking node alive before updating it into dialogs
 export default {
   components: {
     EndpointsWidget
@@ -171,8 +162,8 @@ export default {
       editNodeApiDialog: false,
       newNodeApi: '',
       newEosEndpoint: '',
-      inUseRPC: this.$rpc.rpc.endpoint,
-      inUseEOS: this.$eos.api.authorityProvider.endpoint
+      inUseRPC: '',
+      inUseEOS: ''
     }
   },
   computed: {
@@ -189,12 +180,22 @@ export default {
     this.s1 = setInterval(() => {
       this.checkEosEndpointStatus()
       this.checkNodeApiStatus()
-    }, 300000)
+    }, 60000)
+    this.checkInUse()
   },
   beforeDestroy () {
     clearInterval(this.s1)
   },
   methods: {
+    checkInUse () {
+      this.inUseRPC = this.loggedIn ? this.$rpc.rpc.endpoint : 'undefined'
+      this.inUseEOS = this.loggedIn ? this.$eos.api.authorityProvider.endpoint : 'undefined'
+    },
+    refresh (value) {
+      this.checkNodeApiStatus()
+      this.checkEosEndpointStatus()
+      this.checkInUse()
+    },
     checkEosEndpointStatus () {
       this.$utils.checkEosEndpoint(this.$configStore.get('eos_endpoint')).then(response => {
         this.eosEndpointStatus = response
@@ -206,28 +207,16 @@ export default {
       })
     },
     updateNodeAPI () {
-      // TODO: if the / in the end of the new api then remove it
-      this.$configStore.set('node_api', this.newNodeApi)
+      this.$configManager.updateNodeAPI(this.newNodeApi)
       this.checkNodeApiStatus()
+      this.newNodeApi = ''
+      this.checkInUse()
     },
     updateEosEndpoint () {
-      // TODO: to config manager
-      this.$configStore.set('eos_endpoint', this.newEosEndpoint)
+      this.$configManager.updateEosEndpoint(this.newEosEndpoint, this.loggedIn)
       this.checkEosEndpointStatus()
-      try {
-        Vue.prototype.$rpc = new EosRPC()
-        this.inUseRPC = this.$rpc.rpc.endpoint
-      } catch (error) {
-        this.$userError(error, 'RPC: Update EOS endpoint')
-        throw error
-      }
-      try {
-        Vue.prototype.$eos = new EosAPI(this.$rpc.rpc, this.$store.state.identity.privateKey)
-        this.inUseEOS = this.$eos.api.authorityProvider.endpoint
-      } catch (error) {
-        this.$userError(error, 'API: Update EOS endpoint')
-        throw error
-      }
+      this.newEosEndpoint = ''
+      this.checkInUse()
     }
   }
 }
