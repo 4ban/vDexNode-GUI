@@ -310,6 +310,31 @@ async function vote (votingList, accountName) {
   }
 }
 
+function updateNodeAPI (nodeAPI) {
+  nodeAPI = utils.correctUrl(nodeAPI)
+  configStore.set('node_api', nodeAPI)
+}
+
+function updateEosEndpoint (eosAPI, loggedIn) {
+  eosAPI = utils.correctUrl(eosAPI)
+  configStore.set('eos_endpoint', eosAPI)
+  if (loggedIn) {
+    try {
+      Vue.prototype.$rpc = new EosRPC()
+    } catch (error) {
+      userError(error, 'RPC: Update EOS endpoint')
+      throw error
+    }
+
+    try {
+      Vue.prototype.$eos = new EosAPI(Vue.prototype.$rpc.rpc, store.state.identity.privateKey)
+    } catch (error) {
+      userError(error, 'API: Update EOS endpoint')
+      throw error
+    }
+  }
+}
+
 async function login (privateKey) {
   try {
     var rpc = new EosRPC()
@@ -409,5 +434,7 @@ export {
   registerNode,
   retreiveReward,
   vote,
-  login
+  login,
+  updateNodeAPI,
+  updateEosEndpoint
 }
