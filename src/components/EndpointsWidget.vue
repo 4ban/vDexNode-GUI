@@ -3,9 +3,12 @@
     <q-banner dense class="text-vgrey bg-vdarkgrey q-pa-md">
       <div class="text-subtitle2 text-uppercase">Widget is under development. May not work properly</div>
     </q-banner>
-    <q-banner dense class="text-vgrey bg-vdark q-pa-md">
-      <div class="text-subtitle2 text-uppercase">EOS Endpoints</div>
-      <div>Number of endpoints: {{ this.endpoints.length }}</div>
+    <q-banner dense inline-actions class="text-vgrey bg-vdark q-pa-md text-subtitle2 text-uppercase">
+      EOS Endpoints
+      <template v-slot:action>
+        <q-badge color="vgold" class="text-vdark q-mx-sm">Total endpoints: {{ endpoints.length }}</q-badge>
+        <q-badge color="vgold" class="text-vdark q-mx-sm">Alive endpoints: {{ endpoints.filter(item => item.alive).length }}</q-badge>
+      </template>
     </q-banner>
     <q-linear-progress dark indeterminate track-color="vgrey" color="vgreen" v-if="endpoints.length === 0" />
     <q-table dense square :data="endpoints" :columns="endpointsColumns" row-key="name" virtual-scroll :pagination.sync="endpointsPagination" :rows-per-page-options="[0]" table-style="max-height: 190pt;" hide-bottom class="bg-vdark text-vgrey">
