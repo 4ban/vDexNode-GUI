@@ -3,6 +3,8 @@ import { shell, clipboard } from 'electron'
 import { userError } from '@/util/errorHandler'
 import { userResult } from '@/util/resultHandler'
 import axios from 'axios'
+import { JsonRpc } from 'eosjs'
+const fetch = require('node-fetch')
 const { app, dialog } = require('electron').remote
 const fs = require('fs')
 const request = require('request-promise-native')
@@ -150,13 +152,12 @@ function notifyMe () {
 }
 
 const checkEosEndpoint = async url => {
+  let rpc = new JsonRpc(url, { fetch })
   return new Promise(resolve => {
-    const apiUrl = `${url}/v1/chain/get_info`
-    request({ url: apiUrl, json: false, timeout: 3000, rejectUnauthorized: false })
-      .then(body => {
-        const correctedBody = body.indexOf('{') > 0 ? body.substr(body.indexOf('{')) : body
-        const response = JSON.parse(correctedBody)
-        if (response.server_version) resolve(true)
+    rpc
+      .history_get_key_accounts('EOS82L4gHvinr3o2oktpuTwFKyGAytzMkVU86q1bCb4smeNrU1ngm')
+      .then(result => {
+        if (result) resolve(true)
         else resolve(false)
       })
       .catch(error => {
@@ -164,6 +165,22 @@ const checkEosEndpoint = async url => {
       })
   })
 }
+
+// const checkEosEndpoint = async url => {
+//   return new Promise(resolve => {
+//     const apiUrl = `${url}/v1/chain/get_info`
+//     request({ url: apiUrl, json: false, timeout: 3000, rejectUnauthorized: false })
+//       .then(body => {
+//         const correctedBody = body.indexOf('{') > 0 ? body.substr(body.indexOf('{')) : body
+//         const response = JSON.parse(correctedBody)
+//         if (response.server_version) resolve(true)
+//         else resolve(false)
+//       })
+//       .catch(error => {
+//         if (error) resolve(false)
+//       })
+//   })
+// }
 
 const checkNodeApi = async url => {
   return new Promise(resolve => {

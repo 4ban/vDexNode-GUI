@@ -1,4 +1,4 @@
-import { Api, JsonRpc } from 'eosjs'
+import { Api, JsonRpc, RpcError } from 'eosjs'
 import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig'
 import { userError } from '@/util/errorHandler'
 import { userResult } from '@/util/resultHandler'
