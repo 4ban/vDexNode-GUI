@@ -48,6 +48,7 @@ export default {
   data () {
     return {
       map: '',
+      markers: [],
       nodeGeoData: [],
       nodeGeoDataColumns: [
         {
@@ -162,6 +163,7 @@ export default {
           for (let i = 0; i < this.nodeGeoData.length; i++) {
             if (this.nodeGeoData[i].nodes.includes(account.id)) {
               this.map.setView([this.nodeGeoData[i].lat, this.nodeGeoData[i].long], 10)
+              console.log(this.markers)
             }
           }
         } else {
@@ -181,17 +183,62 @@ export default {
       }).addTo(this.map)
     }, // end of mapLoad
     markersLoad () {
+      let account = this.nodes.find(row => row.account === this.$store.state.identity.accountName)
       for (var i = 0; i < this.nodeGeoData.length; ++i) {
-        L.circle([this.nodeGeoData[i].lat, this.nodeGeoData[i].long], {
-          color: '#c5c6a6',
-          fillColor: '#b2a987',
-          fillOpacity: 0.8,
-          radius: this.nodeGeoData[i].mass * 100
-        })
-          .bindPopup(
-            '<ul><li>City: ' + this.nodeGeoData[i].city + '</li><li>Nodes: ' + this.nodeGeoData[i].mass + '</li></ul>'
+        if (account) {
+          if (this.nodeGeoData[i].nodes.includes(account.id)) {
+            this.markers.push(
+              L.circle([this.nodeGeoData[i].lat, this.nodeGeoData[i].long], {
+                color: '#00F7A9',
+                fillColor: '#009465',
+                fillOpacity: 0.8,
+                radius: this.nodeGeoData[i].mass * 100
+              })
+                .bindPopup(
+                  '<ul><li>City: ' +
+                    this.nodeGeoData[i].city +
+                    '</li><li>Nodes: ' +
+                    this.nodeGeoData[i].mass +
+                    '</li></ul>'
+                )
+                .addTo(this.map)
+            )
+          } else {
+            this.markers.push(
+              L.circle([this.nodeGeoData[i].lat, this.nodeGeoData[i].long], {
+                color: '#c5c6a6',
+                fillColor: '#b2a987',
+                fillOpacity: 0.8,
+                radius: this.nodeGeoData[i].mass * 100
+              })
+                .bindPopup(
+                  '<ul><li>City: ' +
+                    this.nodeGeoData[i].city +
+                    '</li><li>Nodes: ' +
+                    this.nodeGeoData[i].mass +
+                    '</li></ul>'
+                )
+                .addTo(this.map)
+            )
+          }
+        } else {
+          this.markers.push(
+            L.circle([this.nodeGeoData[i].lat, this.nodeGeoData[i].long], {
+              color: '#c5c6a6',
+              fillColor: '#b2a987',
+              fillOpacity: 0.8,
+              radius: this.nodeGeoData[i].mass * 100
+            })
+              .bindPopup(
+                '<ul><li>City: ' +
+                  this.nodeGeoData[i].city +
+                  '</li><li>Nodes: ' +
+                  this.nodeGeoData[i].mass +
+                  '</li></ul>'
+              )
+              .addTo(this.map)
           )
-          .addTo(this.map)
+        }
       }
     }
   } // end of methods

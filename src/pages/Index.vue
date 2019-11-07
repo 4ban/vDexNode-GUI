@@ -301,7 +301,6 @@
         <div class="row q-col-gutter-x-lg titilium">
           <!-- Map Widget -->
           <div class="col-7">
-            <q-banner dense inline-actions class="text-vgrey bg-vdarkgrey">The map widget is currently disabled, the data is artificial.</q-banner>
             <MapWidget v-bind:nodes="nodes" />
           </div>
           <!-- Chat -->
