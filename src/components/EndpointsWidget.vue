@@ -1,5 +1,8 @@
 <template>
   <div>
+    <q-banner dense class="text-vgrey bg-vdarkgrey q-pa-md">
+      <div class="text-subtitle2 text-uppercase">Widget is under development. May not work properly</div>
+    </q-banner>
     <q-banner dense class="text-vgrey bg-vdark q-pa-md">
       <div class="text-subtitle2 text-uppercase">EOS Endpoints</div>
       <div>Number of endpoints: {{ this.endpoints.length }}</div>
@@ -68,7 +71,11 @@ export default {
     this.set1 = setInterval(() => this.getEndpoints(), 300000)
     this.set2 = setInterval(() => this.checkEndpoints(), 10000)
   },
-  computed: {},
+  computed: {
+    loggedIn: function () {
+      return this.$store.getters.isLoggedIn
+    }
+  },
   beforeDestroy () {
     clearInterval(this.set1)
     clearInterval(this.set2)
@@ -144,7 +151,9 @@ export default {
       }
     },
     useEndpoint (endpoint) {
-      console.log(endpoint.https_address || endpoint.http_address)
+      let eosAPI = endpoint.https_address || endpoint.http_address
+      this.$configManager.updateEosEndpoint(eosAPI, this.loggedIn)
+      this.$emit('clicked', true)
     }
   } // end of methods
 }
