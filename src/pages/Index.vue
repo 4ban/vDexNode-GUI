@@ -195,19 +195,19 @@
                     <q-badge color="vgrey" class="text-vdark q-mr-xs">Running: {{ nodes.length }}</q-badge>
                     <q-badge color="vgrey" class="text-vdark q-mr-xs">
                       Registered: {{ registered_nodes.length }}
-                      <q-tooltip content-class="bg-grey text-dark">
+                      <q-tooltip content-class="bg-vgrey text-vdark">
                         <q-badge color="vdark" class="text-vgrey q-pa-xs q-ma-xs" v-for="node in registered_nodes" :key="node">{{ node }}</q-badge>
                       </q-tooltip>
                     </q-badge>
                     <q-badge color="vgrey" class="text-vdark q-mr-xs" v-if="identity.voted_for.length > 0">
                       Voted for you: {{ this.identity.voted_for.length }}
-                      <q-tooltip content-class="bg-grey text-dark">
+                      <q-tooltip content-class="bg-vgrey text-vdark">
                         <q-badge color="vdark" class="text-vgrey q-pa-xs q-ma-xs" v-for="node in identity.voted_for" :key="node">{{ node }}</q-badge>
                       </q-tooltip>
                     </q-badge>
                     <q-badge color="vgrey" class="text-vdark q-mr-xs q-mb-sm" v-if="identity.voted_i.length > 0">
                       I voted for: {{ this.identity.voted_i.length }}
-                      <q-tooltip content-class="bg-grey text-dark">
+                      <q-tooltip content-class="bg-vgrey text-vdark">
                         <q-badge color="vdark" class="text-vgrey q-pa-xs q-ma-xs" v-for="node in identity.voted_i" :key="node">{{ node }}</q-badge>
                       </q-tooltip>
                     </q-badge>

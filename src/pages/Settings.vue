@@ -69,6 +69,17 @@
             <q-list dark dense separator class="bg-vdark text-vgrey q-px-md">
               <q-item>
                 <q-item-section>
+                  <q-item-label>
+                    Node API in use
+                    <q-btn size="xs" class="q-mx-xs" dense flat round icon="fas fa-question" @click="nodeApiHelpDialog = true">
+                      <q-tooltip content-class="bg-vgrey text-vdark" content-style="font-size: 16px" :offset="[10, 10]">Click to know more</q-tooltip>
+                    </q-btn>
+                  </q-item-label>
+                  <q-item-label caption class="code text-vgold">{{ $configStore.get('node_api') }}</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item>
+                <q-item-section>
                   <q-item-label>Config file path</q-item-label>
                   <q-item-label caption class="code text-vgold">{{ $configStore.path }}</q-item-label>
                 </q-item-section>
@@ -139,6 +150,25 @@
             </q-card-section>
           </q-card>
         </q-dialog>
+        <!-- Node Api Help dialog -->
+        <q-dialog v-model="nodeApiHelpDialog">
+          <q-card square style="min-width: 50vw; max-width: 70vw;" class="bg-vdark text-vgrey">
+            <q-card-section>
+              <div class="text-h6">Node API</div>
+              <q-separator dark />
+            </q-card-section>
+            <q-card-section style="max-height: 60vh" class="scroll">
+              <div class="text-subtitle1">
+                At the first launch of the application, a bootstrap node is used to gain access to the network of nodes.
+                There is no way to get around this connection to the bootstrap node for the first time.
+                However any node in the network is full and independent, so you can switch to any other working node at any time.
+              </div>
+            </q-card-section>
+            <q-card-actions align="right">
+              <q-btn outline rounded color="vgold" label="Got it" v-close-popup />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
       </q-page>
     </q-page-container>
   </q-layout>
@@ -160,6 +190,7 @@ export default {
       nodeApiStatus: false,
       editEosEndpointDialog: false,
       editNodeApiDialog: false,
+      nodeApiHelpDialog: false,
       newNodeApi: '',
       newEosEndpoint: '',
       inUseRPC: '',
@@ -168,7 +199,7 @@ export default {
   },
   computed: {
     blur: function () {
-      return this.editNodeApiDialog || this.editEosEndpointDialog
+      return this.editNodeApiDialog || this.editEosEndpointDialog || this.nodeApiHelpDialog
     },
     loggedIn: function () {
       return this.$store.getters.isLoggedIn
