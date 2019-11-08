@@ -20,6 +20,9 @@
         <div class="col bg-vdarker">
           <q-banner dense inline-actions class="text-vgrey bg-vdark q-px-md q-pt-md">
             <div class="text-subtitle2 text-uppercase">Distribution</div>
+            <template v-slot:action>
+              <q-btn outline flat round color="vgrey" size="sm" icon="fas fa-sync-alt" class="q-mx-xs" @click="getNodesLocation()" />
+            </template>
           </q-banner>
         </div>
         <div class="col bg-vdark">
@@ -74,10 +77,14 @@ export default {
     }
   },
   mounted () {
-    this.getNodesLocation()
+    this.mw1 = setInterval(() => this.getNodesLocation(), 60000)
     this.mapInit()
     this.mapLoad()
+    this.mw2 = setTimeout(() => this.getNodesLocation(), 3000)
     this.markersLoad()
+  },
+  beforeDestroy () {
+    clearInterval(this.mw1)
   },
   watch: {
     nodeGeoData: function () {
@@ -87,6 +94,7 @@ export default {
   },
   methods: {
     async getNodesLocation () {
+      this.nodeGeoData = []
       await this.getLocationsData() // Real data
       // await this.getLocationsDataFake() // Fake data
     },
@@ -163,7 +171,6 @@ export default {
           for (let i = 0; i < this.nodeGeoData.length; i++) {
             if (this.nodeGeoData[i].nodes.includes(account.id)) {
               this.map.setView([this.nodeGeoData[i].lat, this.nodeGeoData[i].long], 10)
-              console.log(this.markers)
             }
           }
         } else {
