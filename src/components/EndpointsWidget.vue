@@ -2,6 +2,7 @@
   <div>
     <q-banner dense class="text-vgrey bg-vdarkgrey q-pa-md">
       <div class="text-subtitle2 text-uppercase">Widget is under development. May not work properly</div>
+      <div class="text-caption">Live node must have history plugin enabled</div>
     </q-banner>
     <q-banner dense inline-actions class="text-vgrey bg-vdark q-pa-md text-subtitle2 text-uppercase">
       EOS Endpoints
