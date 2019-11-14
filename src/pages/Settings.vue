@@ -116,6 +116,9 @@
               </q-item>
             </q-list>
           </div>
+          <div class="col-5" v-if="loggedIn">
+            <NodeApiWidget @clicked="refresh()" />
+          </div>
           <div class="col-12" v-if="loggedIn">
             <EndpointsWidget @clicked="refresh()" />
           </div>
@@ -177,10 +180,12 @@
 <script>
 import Vue from 'vue'
 import EndpointsWidget from '../components/EndpointsWidget.vue'
-// TODO: add the lazy checking node alive before updating it into dialogs
+import NodeApiWidget from '../components/NodeApiWidget.vue'
+
 export default {
   components: {
-    EndpointsWidget
+    EndpointsWidget,
+    NodeApiWidget
   },
   data () {
     return {

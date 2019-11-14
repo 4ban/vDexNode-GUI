@@ -192,7 +192,10 @@ const checkNodeApi = async url => {
         else resolve(false)
       })
       .catch(error => {
-        if (error) resolve(false)
+        if (error) {
+          // console.log(error)
+          resolve(false)
+        }
       })
   })
 }
