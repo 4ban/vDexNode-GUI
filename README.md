@@ -9,6 +9,8 @@
 The application allows you to manage a vDexNode node running in a openDHT network using a set of smart contracts of the EOS blockchain platform.
 
 ![image_2019-11-01_10-24-39](https://user-images.githubusercontent.com/2269864/68046084-3ff8a880-fc98-11e9-912d-871be9a1a9fb.png)
+<img width="1680" alt="Screen Shot 2019-11-27 at 9 09 07 AM" src="https://user-images.githubusercontent.com/2269864/69744806-c1a3f080-10f5-11ea-8787-2280672be39b.png">
+<img width="1680" alt="Screen Shot 2019-11-27 at 9 09 46 AM" src="https://user-images.githubusercontent.com/2269864/69744807-c1a3f080-10f5-11ea-92a1-bd80016e3fde.png">
 
 ## Table of Contents
 
